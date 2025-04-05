@@ -1,7 +1,7 @@
 import tkinter as tk
 import cv2
 from PIL import Image, ImageTk
-# Import the new FacialRecognition class
+# Import the new facial_recognition class
 from facial_recognition import FacialRecognition  
 
 class CameraApp:
