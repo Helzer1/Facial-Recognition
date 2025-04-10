@@ -9,12 +9,20 @@ class CameraApp:
         self.root = root
         self.root.title("Facial Recognition")
         self.root.geometry("1250x750")
-        
+
+        #Dark Mode Check Box
+        self.dark_mode_var = tk.BooleanVar()
+        self.check_dark_mode=tk.Checkbutton(self.root, text="Dark Mode", variable=self.dark_mode_var, command=self.dark_mode)
+        self.check_dark_mode.place(x=1150, y=725)
         # UI elements setup
         self.detect_label = tk.Label(self.root, text="Detected People:")
         self.detect_label.place(x=1000, y=60)
+
+        self.det_people_frame = tk.Frame(self.root, bg="darkgray", width=375, height=525)
+        self.det_people_frame.place(x=850, y=80)
+
         self.detected_people_text = tk.Text(self.root, height=30, width=40)
-        self.detected_people_text.place(x=875, y=80)
+        self.detected_people_text.place(x=875, y=100)
         
         # Initializes start button
         self.start_button = tk.Button(self.root, text="Start Feed", width=10, height = 2, command=self.start_stop_feed)
@@ -28,7 +36,7 @@ class CameraApp:
         self.create_user_button = tk.Button(self.root, text="Create User", width=10, height = 2) # Have to add ", command=create_user" and make create_user function
         self.create_user_button.place(x=190,y=625)
 
-        self.create_user_frame = tk.Frame(self.root, bg="lightgray", width=325, height=200)
+        self.create_user_frame = tk.Frame(self.root, bg="darkgray", width=325, height=200)
         self.create_user_frame.place(x=300, y=500)
 
         self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2) # Have to add ", command=cap_image" and create cap_image function
@@ -40,15 +48,15 @@ class CameraApp:
 
         #Export/Refresh Buttons
         self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2) # Have to add ", command=refresh_list" and create refresh_list function
-        self.refresh_button.place(x=925, y=590)
+        self.refresh_button.place(x=925, y=615)
 
         self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2) # Have to add ", command=export_list" and create export_list function
-        self.export_button.place(x=1075, y=590)
+        self.export_button.place(x=1075, y=615)
 
 
         # Initializes the frame on the UI
-        self.vid_frame = tk.Frame(self.root, bg="lightgray", width=685, height=395).place(x=50, y=75)
-        
+        self.vid_frame = tk.Frame(self.root, bg="darkgray", width=685, height=395)
+        self.vid_frame.place(x=50, y=75)
         self.feed_widget = tk.Label(self.root)
         self.feed_widget.place(x=75, y=90)
         
@@ -123,6 +131,49 @@ class CameraApp:
                 self.cap.release()
             cv2.destroyAllWindows()
             self.feed_widget.config(image='')
+
+    def dark_mode(self):
+        if self.dark_mode_var.get():
+            #Set Background to Dark Mode
+            self.root.configure(bg="gray18") 
+            #Set Labels to Dark Mode
+            self.detect_label.configure(bg='gray60', fg="gray99")
+            self.feed_label.configure(bg='gray60', fg="gray99")
+            #Set Frames to Dark Mode
+            self.det_people_frame.configure(bg='gray27')
+            self.create_user_frame.configure(bg='gray27')
+            self.vid_frame.configure(bg='gray27')
+            #Set Text Boxes to Dark Mode
+            self.detected_people_text.configure(bg='gray60', fg="gray99")
+            self.name_cap.configure(bg='gray60', fg="gray99")
+            #Set Buttons to Dark Mode
+            self.start_button.configure(bg='gray60', fg="gray99")
+            self.create_user_button.configure(bg='gray60', fg="gray99")
+            self.cap_image_button.configure(bg='gray60', fg="gray99")
+            self.refresh_button.configure(bg='gray60', fg="gray99")
+            self.export_button.configure(bg='gray60', fg="gray99")
+
+        else:
+            #Set Background to Light Mode
+            self.root.configure(bg="SystemButtonFace")
+            #Set Labels to Light Mode
+            self.detect_label.configure(bg='SystemButtonFace', fg="black")
+            self.feed_label.configure(bg='SystemButtonFace', fg="black")
+            #Set Frames to Light Mode
+            self.det_people_frame.configure(bg='darkgray')
+            self.create_user_frame.configure(bg='darkgray')
+            self.vid_frame.configure(bg='darkgray')
+            #Set Text Boxes to Light Mode
+            self.detected_people_text.configure(bg='SystemButtonFace', fg="black")
+            self.name_cap.configure(bg='SystemButtonFace', fg="black")
+            #Set Buttons to Light Mode 
+            self.start_button.configure(bg='SystemButtonFace', fg="black")
+            self.create_user_button.configure(bg='SystemButtonFace', fg="black")
+            self.cap_image_button.configure(bg='SystemButtonFace', fg="black")
+            self.refresh_button.configure(bg='SystemButtonFace', fg="black")
+            self.export_button.configure(bg='SystemButtonFace', fg="black")
+
+
 
 
 if __name__ == "__main__":
