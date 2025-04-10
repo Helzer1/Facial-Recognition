@@ -11,20 +11,43 @@ class CameraApp:
         self.root.geometry("1250x750")
         
         # UI elements setup
-        tk.Label(self.root, text="Detected People:").place(x=1000, y=60)
+        self.detect_label = tk.Label(self.root, text="Detected People:")
+        self.detect_label.place(x=1000, y=60)
         self.detected_people_text = tk.Text(self.root, height=30, width=40)
         self.detected_people_text.place(x=875, y=80)
         
         # Initializes start button
-        self.start_button = tk.Button(self.root, text="Start Feed", command=self.start_stop_feed)
-        self.start_button.place(x=350, y=600)
+        self.start_button = tk.Button(self.root, text="Start Feed", width=10, height = 2, command=self.start_stop_feed)
+        self.start_button.place(x=190, y=550)
         
         # Initializes the feed label to "Off"
         self.feed_label = tk.Label(self.root, text="Feed Off")
         self.feed_label.place(x=350, y=50)
         
+        #Create User UI Elements
+        self.create_user_button = tk.Button(self.root, text="Create User", width=10, height = 2) # Have to add ", command=create_user" and make create_user function
+        self.create_user_button.place(x=190,y=625)
+
+        self.create_user_frame = tk.Frame(self.root, bg="lightgray", width=325, height=200)
+        self.create_user_frame.place(x=300, y=500)
+
+        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2) # Have to add ", command=cap_image" and create cap_image function
+        self.cap_image_button.place(x=395,y=550)
+
+        self.name_cap = tk.Text(self.root, height=2,width=35)
+        self.name_cap.place(x=320,y=605)
+        self.name_cap.insert("1.0","Enter name of User:\n") # Have to write function to take user written text from the text box
+
+        #Export/Refresh Buttons
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2) # Have to add ", command=refresh_list" and create refresh_list function
+        self.refresh_button.place(x=925, y=590)
+
+        self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2) # Have to add ", command=export_list" and create export_list function
+        self.export_button.place(x=1075, y=590)
+
+
         # Initializes the frame on the UI
-        tk.Frame(self.root, bg="lightgray", width=685, height=395).place(x=50, y=75)
+        self.vid_frame = tk.Frame(self.root, bg="lightgray", width=685, height=395).place(x=50, y=75)
         
         self.feed_widget = tk.Label(self.root)
         self.feed_widget.place(x=75, y=90)
