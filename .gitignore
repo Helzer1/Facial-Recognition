@@ -1,5 +1,6 @@
 # Ignore virtual environment folder
 venv/
+my_venv/
 mac.venv/
 
 # Ignore Python bytecode files
