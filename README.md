@@ -29,8 +29,12 @@ Clone the Repository:
         On macOS/Linux:
             source venv/bin/activate
 
+    Be sure to have the latest version of pip installed:
+        python -m pip install --upgrade pip
+
     Install Dependencies:
         pip install -r requirements.txt
+        If this is not working then pip may not be up to date. Please install latest version.
 
     Run the Application:
         python ui.py
