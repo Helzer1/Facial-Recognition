@@ -62,9 +62,13 @@ class CameraApp:
         
         # Setting up the camera
         self.cap = cv2.VideoCapture(0)
-        width, height = 450, 400  # Camera dimensions
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        self.width, self.height = 500, 350  
+        # Camera dimensions that stretch in box for macOS is 625w x 350h
+        # Camera dimensions that fit in box for macOS is 500w x 350h
+        # This is stretched though and should probably fit the window better
+        # Maybe a different UI window based on operating system?
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         
         # Initializes the feed status to false for start_stop_feed to enable
         self.feed_active = False  
@@ -76,6 +80,9 @@ class CameraApp:
         if self.feed_active:
             ret, frame = self.cap.read()
             if ret:
+                # Resize the frame
+                frame = cv2.resize(frame, (self.width, self.height))
+
                 # Get face locations and names from the recognition module
                 face_locations, face_names = self.recognition.recognize_faces(frame)
 
@@ -115,9 +122,9 @@ class CameraApp:
         if not self.feed_active:
             if not self.cap.isOpened():
                 self.cap = cv2.VideoCapture(0)
-                width, height = 450, 400  # Camera dimensions
-                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+                #width, height = 325, 200  # Camera dimensions
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
                 
             self.feed_active = True
             self.feed_label.config(text="Feed On")
