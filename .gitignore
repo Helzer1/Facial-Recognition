@@ -10,3 +10,7 @@ __pycache__/
 # Ignore IDE/editor config files 
 .vscode/
 .idea/
+
+# Ignore sensative information
+stored_images/
+image_data/
