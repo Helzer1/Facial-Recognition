@@ -64,7 +64,7 @@ class CameraApp:
         self.feed_widget.place(x=75, y=90)
         
         # Setting up the camera
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
         self.width, self.height = 500, 350  
         # Camera dimensions that stretch in box for macOS is 625w x 350h
         # Camera dimensions that fit in box for macOS is 500w x 350h
@@ -143,7 +143,7 @@ class CameraApp:
     def start_stop_feed(self):
         if not self.feed_active:
             if not self.cap.isOpened():
-                self.cap = cv2.VideoCapture(0)
+                self.cap = cv2.VideoCapture(1)
                 #width, height = 325, 200  # Camera dimensions
                 self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
                 self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
