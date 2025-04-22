@@ -5,7 +5,7 @@ mac.venv/
 
 # Ignore Python bytecode files
 *.pyc
-__pycache__/
+/__pycache__/
 
 # Ignore IDE/editor config files 
 .vscode/
