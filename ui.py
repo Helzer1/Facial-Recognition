@@ -44,6 +44,7 @@ class CameraApp:
         self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) # Have to add ", command=cap_image" and create cap_image function
         self.cap_image_button.place(x=395,y=550)
 
+        # Username entry box
         self.name_cap = tk.Text(self.root, height=2,width=35) # Have to write function to take user written text from the text box
         self.name_cap.place(x=320,y=625)
         self.name_label = tk.Label(self.root, text="Enter name of User:")
