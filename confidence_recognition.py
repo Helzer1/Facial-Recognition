@@ -123,7 +123,7 @@ class ConfidenceRecognition(Storage):
                                 name = self.known_face_names[best_match_index]
                     
                     face_names.append(name)
-                    confidence_scores.append(confidence * 100)  # People like percentages
+                    confidence_scores.append(confidence * 100)  
                     confidence_colors.append(color)
                 
                 else:
