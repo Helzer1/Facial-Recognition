@@ -1,8 +1,9 @@
 import tkinter as tk
 import cv2
+from tkinter import messagebox
 from PIL import Image, ImageTk
-# Import the new facial_recognition class
-from facial_recognition import FacialRecognition  
+from facial_recognition import FacialRecognition # Import the facial_recognition class
+from file_storage import Storage
 
 class CameraApp:
     def __init__(self, root):
@@ -10,7 +11,7 @@ class CameraApp:
         self.root.title("Facial Recognition")
         self.root.geometry("1250x750")
 
-        #Dark Mode Check Box
+        # Dark Mode Check Box
         self.dark_mode_var = tk.BooleanVar()
         self.check_dark_mode=tk.Checkbutton(self.root, text="Dark Mode", variable=self.dark_mode_var, command=self.dark_mode)
         self.check_dark_mode.place(x=1150, y=725)
@@ -32,14 +33,15 @@ class CameraApp:
         self.feed_label = tk.Label(self.root, text="Feed Off")
         self.feed_label.place(x=350, y=50)
         
-        #Create User UI Elements
+        # Create User UI Elements
         self.create_user_button = tk.Button(self.root, text="Create User", width=10, height = 2) # Have to add ", command=create_user" and make create_user function
         self.create_user_button.place(x=190,y=625)
 
         self.create_user_frame = tk.Frame(self.root, bg="darkgray", width=325, height=200)
         self.create_user_frame.place(x=300, y=500)
 
-        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2) # Have to add ", command=cap_image" and create cap_image function
+        # Capture image button
+        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) # Have to add ", command=cap_image" and create cap_image function
         self.cap_image_button.place(x=395,y=550)
 
         self.name_cap = tk.Text(self.root, height=2,width=35) # Have to write function to take user written text from the text box
@@ -47,11 +49,11 @@ class CameraApp:
         self.name_label = tk.Label(self.root, text="Enter name of User:")
         self.name_label.place(x=321, y=605)
 
-        #Export/Refresh Buttons
-        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2) # Have to add ", command=refresh_list" and create refresh_list function
+        # Export/Refresh Buttons
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = Storage.refresh_button(self)) # Have to add ", command=refresh_list" and create refresh_list function
         self.refresh_button.place(x=925, y=615)
 
-        self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2) # Have to add ", command=export_list" and create export_list function
+        self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2, command = Storage.export_button(self)) # Have to add ", command=export_list" and create export_list function
         self.export_button.place(x=1075, y=615)
 
 
@@ -63,20 +65,46 @@ class CameraApp:
         
         # Setting up the camera
         self.cap = cv2.VideoCapture(0)
-        width, height = 450, 400  # Camera dimensions
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        self.width, self.height = 500, 350  
+        # Camera dimensions that stretch in box for macOS is 625w x 350h
+        # Camera dimensions that fit in box for macOS is 500w x 350h
+        # This is stretched though and should probably fit the window better
+        # Maybe a different UI window based on operating system?
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+
+        # Check if the camera is opened correctly
+        if not self.cap.isOpened():
+            print("Error: Camera not initialized!")
+            messagebox.showerror("Camera Error", "Could not open the camera.")
+            return
         
         # Initializes the feed status to false for start_stop_feed to enable
         self.feed_active = False  
 
         # Initialize FacialRecognition for face detection and recognition
-        self.recognition = FacialRecognition()
+        self.recognition = FacialRecognition(self.cap, self.name_cap)
+
+        # Initialize Storage for handling user data, passing capture and name_cap
+        self.storage = Storage(self.cap, self.name_cap, self.recognition)  # Now passing both arguments
+
+        self.start_stop_feed()
+
+    def capture_image(self):
+        # Now use the method correctly via `self.storage.take_picture()`
+        uid, _ = self.storage.take_picture()
+        if uid:
+            self.recognition.load_known_faces()
 
     def open_camera(self):
+        #print(self.recognition.known_face_names) # Debug
+
         if self.feed_active:
             ret, frame = self.cap.read()
             if ret:
+                # Resize the frame
+                frame = cv2.resize(frame, (self.width, self.height))
+
                 # Get face locations and names from the recognition module
                 face_locations, face_names = self.recognition.recognize_faces(frame)
 
@@ -116,9 +144,9 @@ class CameraApp:
         if not self.feed_active:
             if not self.cap.isOpened():
                 self.cap = cv2.VideoCapture(0)
-                width, height = 450, 400  # Camera dimensions
-                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+                #width, height = 325, 200  # Camera dimensions
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
                 
             self.feed_active = True
             self.feed_label.config(text="Feed On")
