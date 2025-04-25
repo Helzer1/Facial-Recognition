@@ -45,9 +45,10 @@ class CameraApp:
         self.cap_image_button.place(x=395,y=550)
 
         # Username entry box
-        self.name_cap = tk.Text(self.root, height=2,width=35)
-        self.name_cap.place(x=320,y=605)
-        self.name_cap.insert("1.0","") 
+        self.name_cap = tk.Text(self.root, height=2,width=35) # Have to write function to take user written text from the text box
+        self.name_cap.place(x=320,y=625)
+        self.name_label = tk.Label(self.root, text="Enter name of User:")
+        self.name_label.place(x=321, y=605)
 
         # Export/Refresh Buttons
         self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = Storage.refresh_button(self)) # Have to add ", command=refresh_list" and create refresh_list function
@@ -168,6 +169,7 @@ class CameraApp:
             #Set Labels to Dark Mode
             self.detect_label.configure(bg='gray60', fg="gray99")
             self.feed_label.configure(bg='gray60', fg="gray99")
+            self.name_label.configure(bg='gray60', fg="gray99")
             #Set Frames to Dark Mode
             self.det_people_frame.configure(bg='gray27')
             self.create_user_frame.configure(bg='gray27')
@@ -181,6 +183,7 @@ class CameraApp:
             self.cap_image_button.configure(bg='gray60', fg="gray99")
             self.refresh_button.configure(bg='gray60', fg="gray99")
             self.export_button.configure(bg='gray60', fg="gray99")
+            self.check_dark_mode.configure(bg='gray60', fg="gray99")
 
         else:
             #Set Background to Light Mode
@@ -188,6 +191,7 @@ class CameraApp:
             #Set Labels to Light Mode
             self.detect_label.configure(bg='SystemButtonFace', fg="black")
             self.feed_label.configure(bg='SystemButtonFace', fg="black")
+            self.name_label.configure(bg='SystemButtonFace', fg="black")
             #Set Frames to Light Mode
             self.det_people_frame.configure(bg='darkgray')
             self.create_user_frame.configure(bg='darkgray')
@@ -201,6 +205,8 @@ class CameraApp:
             self.cap_image_button.configure(bg='SystemButtonFace', fg="black")
             self.refresh_button.configure(bg='SystemButtonFace', fg="black")
             self.export_button.configure(bg='SystemButtonFace', fg="black")
+            self.check_dark_mode.configure(bg='SystemButtonFace', fg="black")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
