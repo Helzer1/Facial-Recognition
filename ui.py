@@ -51,7 +51,7 @@ class CameraApp:
         self.name_label.place(x=321, y=605)
 
         # Export/Refresh Buttons
-        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = Storage.refresh_button(self)) # Have to add ", command=refresh_list" and create refresh_list function
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) # Have to add ", command=refresh_list" and create refresh_list function
         self.refresh_button.place(x=925, y=615)
 
         self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2, command = Storage.export_button(self)) # Have to add ", command=export_list" and create export_list function
@@ -161,6 +161,9 @@ class CameraApp:
                 self.cap.release()
             cv2.destroyAllWindows()
             self.feed_widget.config(image='')
+    
+    def refresh(self):
+        self.detected_people_text.delete("0.0", tk.END)
 
     def dark_mode(self):
         if self.dark_mode_var.get():
