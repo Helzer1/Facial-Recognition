@@ -96,6 +96,8 @@ class CameraApp:
         uid, _ = self.storage.take_picture()
         if uid:
             self.recognition.load_known_faces()
+        
+        self.name_cap.delete("0.0", tk.END)
 
     def open_camera(self):
         #print(self.recognition.known_face_names) # Debug
