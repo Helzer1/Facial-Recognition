@@ -16,6 +16,9 @@ class FacialRecognition:
         # Load previously registered faces and their encodings from the storage
         self.load_known_faces()
 
+        # Load names
+        self.face_names = []
+
     def load_known_faces(self):
         """
         This method loads all the images stored in the `LocalImageStorage`.
@@ -81,11 +84,11 @@ class FacialRecognition:
                 face_encodings.append(None)
 
         # Initialize a list to hold the names for each face.
-        face_names = []
+        # self.face_names = []
         for encoding in face_encodings:
             if encoding is None:
                 # If encoding failed, mark the face as "Unknown"
-                face_names.append("Unknown")
+                self.face_names.append("Unknown")
             else:
                 # Compare this encoding against known face encodings
                 matches = face_recognition.compare_faces(self.known_face_encodings, encoding)
@@ -93,9 +96,9 @@ class FacialRecognition:
                 if True in matches:
                     first_match_index = matches.index(True)
                     name = self.known_face_names[first_match_index]
-                face_names.append(name)
+                self.face_names.append(name)
 
         # Return the detected face locations and the corresponding names.
-        return face_locations, face_names
+        return face_locations, self.face_names
 
 
