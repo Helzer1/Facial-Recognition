@@ -1,10 +1,13 @@
+from random import choices
 import tkinter as tk
 import cv2
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
 from facial_recognition import FacialRecognition # Import the facial_recognition class
 from file_storage import Storage
+from export_storage import ExportStorage
 from confidence_recognition import ConfidenceRecognition
+
 
 class CameraApp:
     def __init__(self, root):
@@ -52,12 +55,23 @@ class CameraApp:
         self.name_label.place(x=321, y=605)
 
         # Export/Refresh Buttons
+
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = Storage.refresh_button(self)) # Have to add ", command=refresh_list" and create refresh_list function
+        self.refresh_button.place(x=1075, y=615)
         self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) # Have to add ", command=refresh_list" and create refresh_list function
         self.refresh_button.place(x=925, y=615)
 
-        self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2, command = Storage.export_button(self)) # Have to add ", command=export_list" and create export_list function
-        self.export_button.place(x=1075, y=615)
 
+        self.export_button = tk.Button(self.root, text="Export List", width=10, height=2, command=self.handle_export)
+        self.export_button.place(x=925, y=615)
+
+        # Dropdown menu
+        self.choices = ["txt", "csv", "json"]
+        self.export_label = tk.Label(self.root, text="Export Type:")
+        self.export_label.place(x=925, y=650)
+        self.export_dropdown = ttk.Combobox(self.root, values = self.choices)
+        self.export_dropdown.pack(anchor = tk.W, padx = 10)
+        self.export_dropdown.place(x=925, y=675)
 
         # Initializes the frame on the UI
         self.vid_frame = tk.Frame(self.root, bg="darkgray", width=685, height=395)
@@ -100,6 +114,24 @@ class CameraApp:
         
         self.name_cap.delete("0.0", tk.END)
 
+    def handle_export(self):
+        export_type = self.export_dropdown.get()
+        self.export_list(export_type)
+
+    def export_list(self, choice):
+        exporter = ExportStorage(self.recognition, choice)
+
+        if choice == "txt":
+            exporter.export_to_txt()
+        elif choice == "csv":
+            exporter.export_to_csv()
+        elif choice == "json":
+            exporter.export_to_json()
+        else:
+            print("Error: Invalid export type.")
+            messagebox.showerror("Export Error", "Invalid export type.")
+            return
+
     def open_camera(self):
         if self.feed_active:
             ret, frame = self.cap.read()
@@ -137,10 +169,16 @@ class CameraApp:
 
                 # Update the detected people text box
                 self.detected_people_text.delete(1.0, tk.END)
+
+                unique_names = list(set(face_names))
+                for name in unique_names:
+                    self.detected_people_text.insert(tk.END, name + "\n")
+
                 for name, score in zip(face_names, confidence_scores):
                     confidence_level = "HIGH" if score >= 70 else "MEDIUM" if score >= 50 else "LOW"
                     self.detected_people_text.insert(tk.END, f"{name}\n")
                     self.detected_people_text.insert(tk.END, f"Confidence: {score:.1f}% ({confidence_level})\n\n")
+
                 
                 # Convert the frame to a format that can be displayed in Tkinter
                 opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
