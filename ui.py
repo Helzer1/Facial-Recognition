@@ -41,17 +41,17 @@ class CameraApp:
         self.create_user_frame.place(x=300, y=500)
 
         # Capture image button
-        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) # Have to add ", command=cap_image" and create cap_image function
+        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) 
         self.cap_image_button.place(x=395,y=550)
 
         # Username entry box
-        self.name_cap = tk.Text(self.root, height=2,width=35) # Have to write function to take user written text from the text box
+        self.name_cap = tk.Text(self.root, height=2,width=35) 
         self.name_cap.place(x=320,y=625)
         self.name_label = tk.Label(self.root, text="Enter name of User:")
         self.name_label.place(x=321, y=605)
 
         # Export/Refresh Buttons
-        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) # Have to add ", command=refresh_list" and create refresh_list function
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) 
         self.refresh_button.place(x=925, y=615)
 
         self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2, command = Storage.export_button(self)) # Have to add ", command=export_list" and create export_list function
@@ -96,7 +96,7 @@ class CameraApp:
         uid, _ = self.storage.take_picture()
         if uid:
             self.recognition.load_known_faces()
-        
+        # Delete entered name from the user entry box
         self.name_cap.delete("0.0", tk.END)
 
     def open_camera(self):
