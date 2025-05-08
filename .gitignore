@@ -14,3 +14,4 @@ __pycache__/
 # Ignore sensative information
 stored_images/
 image_data/
+exported_data/

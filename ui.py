@@ -1,9 +1,12 @@
+from random import choices
 import tkinter as tk
 import cv2
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
-from facial_recognition import FacialRecognition # Import the facial_recognition class
 from file_storage import Storage
+from export_storage import ExportStorage
+from confidence_recognition import ConfidenceRecognition
+
 
 class CameraApp:
     def __init__(self, root):
@@ -34,28 +37,34 @@ class CameraApp:
         self.feed_label.place(x=350, y=50)
         
         # Create User UI Elements
-        self.create_user_button = tk.Button(self.root, text="Create User", width=10, height = 2) # Have to add ", command=create_user" and make create_user function
-        self.create_user_button.place(x=190,y=625)
-
         self.create_user_frame = tk.Frame(self.root, bg="darkgray", width=325, height=200)
         self.create_user_frame.place(x=300, y=500)
 
         # Capture image button
-        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) # Have to add ", command=cap_image" and create cap_image function
+        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) 
         self.cap_image_button.place(x=395,y=550)
 
         # Username entry box
-        self.name_cap = tk.Text(self.root, height=2,width=35)
-        self.name_cap.place(x=320,y=605)
-        self.name_cap.insert("1.0","") 
+        self.name_cap = tk.Text(self.root, height=2,width=35) 
+        self.name_cap.place(x=320,y=625)
+        self.name_label = tk.Label(self.root, text="Enter name of User:")
+        self.name_label.place(x=321, y=605)
 
         # Export/Refresh Buttons
-        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = Storage.refresh_button(self)) # Have to add ", command=refresh_list" and create refresh_list function
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) 
         self.refresh_button.place(x=925, y=615)
 
-        self.export_button = tk.Button(self.root, text="Export List", width=10, height = 2, command = Storage.export_button(self)) # Have to add ", command=export_list" and create export_list function
-        self.export_button.place(x=1075, y=615)
 
+        self.export_button = tk.Button(self.root, text="Export List", width=10, height=2, command=self.handle_export)
+        self.export_button.place(x=1055, y=615)
+
+        # Dropdown menu
+        self.choices = ["txt", "csv", "json"]
+        self.export_label = tk.Label(self.root, text="Export Type:")
+        self.export_label.place(x=1055, y=665)
+        self.export_dropdown = ttk.Combobox(self.root, values = self.choices)
+        self.export_dropdown.pack(anchor = tk.W, padx = 10)
+        self.export_dropdown.place(x=1055, y=690)
 
         # Initializes the frame on the UI
         self.vid_frame = tk.Frame(self.root, bg="darkgray", width=685, height=395)
@@ -82,8 +91,8 @@ class CameraApp:
         # Initializes the feed status to false for start_stop_feed to enable
         self.feed_active = False  
 
-        # Initialize FacialRecognition for face detection and recognition
-        self.recognition = FacialRecognition(self.cap, self.name_cap)
+        # Initialize ConfidenceRecognition for face detection and recognition
+        self.recognition = ConfidenceRecognition(self.cap, self.name_cap)
 
         # Initialize Storage for handling user data, passing capture and name_cap
         self.storage = Storage(self.cap, self.name_cap, self.recognition)  # Now passing both arguments
@@ -95,10 +104,28 @@ class CameraApp:
         uid, _ = self.storage.take_picture()
         if uid:
             self.recognition.load_known_faces()
+        # Delete entered name from the user entry box
+        self.name_cap.delete("0.0", tk.END)
+
+    def handle_export(self):
+        export_type = self.export_dropdown.get()
+        self.export_list(export_type)
+
+    def export_list(self, choice):
+        exporter = ExportStorage(self.recognition, choice)
+
+        if choice == "txt":
+            exporter.export_to_txt()
+        elif choice == "csv":
+            exporter.export_to_csv()
+        elif choice == "json":
+            exporter.export_to_json()
+        else:
+            print("Error: Invalid export type.")
+            messagebox.showerror("Export Error", "Invalid export type.")
+            return
 
     def open_camera(self):
-        #print(self.recognition.known_face_names) # Debug
-
         if self.feed_active:
             ret, frame = self.cap.read()
             if ret:
@@ -107,16 +134,44 @@ class CameraApp:
 
                 # Get face locations and names from the recognition module
                 face_locations, face_names = self.recognition.recognize_faces(frame)
+                
+                # Get confidence scores
+                confidence_scores = self.recognition.get_last_confidence_scores()
 
-                # Draw rectangles around faces and display names
-                for (top, right, bottom, left), name in zip(face_locations, face_names):
+                # Draw rectangles around faces and display names and confidence
+                for (top, right, bottom, left), name, score in zip(face_locations, face_names, confidence_scores):
+                    # Draw the rectangle with green color
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                    cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+                    
+                
+                    cv2.putText(frame, name, (left, top - 10), 
+                              cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
+                    
+                    # Determine confidence text color based on confidence
+                    if score >= 70:
+                        conf_color = (0, 255, 0)  # Green for HIGH
+                    elif score >= 50:
+                        conf_color = (0, 255, 255)  # Yellow for MEDIUM
+                    else:
+                        conf_color = (0, 0, 255)  # Red for LOW
+                    
+                    # Draw confidence score above the head with confidence-based color
+                    confidence_text = f"{score:.1f}%"
+                    cv2.putText(frame, confidence_text, (left, top - 30), 
+                              cv2.FONT_HERSHEY_SIMPLEX, 0.75, conf_color, 2)
 
                 # Update the detected people text box
                 self.detected_people_text.delete(1.0, tk.END)
-                for name in face_names:
+
+                unique_names = list(set(face_names))
+                for name in unique_names:
                     self.detected_people_text.insert(tk.END, name + "\n")
+
+                for name, score in zip(face_names, confidence_scores):
+                    confidence_level = "HIGH" if score >= 70 else "MEDIUM" if score >= 50 else "LOW"
+                    self.detected_people_text.insert(tk.END, f"{name}\n")
+                    self.detected_people_text.insert(tk.END, f"Confidence: {score:.1f}% ({confidence_level})\n\n")
+
                 
                 # Convert the frame to a format that can be displayed in Tkinter
                 opencv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
@@ -127,8 +182,9 @@ class CameraApp:
                 self.feed_widget.photo_image = photo_image
                 self.feed_widget.configure(image=photo_image)
                 
-                # Schedule the next frame capture after 10 milliseconds
+                 # Schedule the next frame capture after 10 milliseconds
                 self.feed_widget.after(10, self.open_camera)
+
             else:
                 print("Failed to capture frame. Stopping feed.")
                 # Stopping the feed here keeps the print statement from infinite loop
@@ -160,6 +216,9 @@ class CameraApp:
                 self.cap.release()
             cv2.destroyAllWindows()
             self.feed_widget.config(image='')
+    
+    def refresh(self):
+        self.detected_people_text.delete("0.0", tk.END)
 
     def dark_mode(self):
         if self.dark_mode_var.get():
@@ -168,6 +227,8 @@ class CameraApp:
             #Set Labels to Dark Mode
             self.detect_label.configure(bg='gray60', fg="gray99")
             self.feed_label.configure(bg='gray60', fg="gray99")
+            self.name_label.configure(bg='gray60', fg="gray99")
+            self.export_label.configure(bg='gray60', fg="gray99")
             #Set Frames to Dark Mode
             self.det_people_frame.configure(bg='gray27')
             self.create_user_frame.configure(bg='gray27')
@@ -177,10 +238,10 @@ class CameraApp:
             self.name_cap.configure(bg='gray60', fg="gray99")
             #Set Buttons to Dark Mode
             self.start_button.configure(bg='gray60', fg="gray99")
-            self.create_user_button.configure(bg='gray60', fg="gray99")
             self.cap_image_button.configure(bg='gray60', fg="gray99")
             self.refresh_button.configure(bg='gray60', fg="gray99")
             self.export_button.configure(bg='gray60', fg="gray99")
+            self.check_dark_mode.configure(bg='gray60', fg="gray99")
 
         else:
             #Set Background to Light Mode
@@ -188,6 +249,8 @@ class CameraApp:
             #Set Labels to Light Mode
             self.detect_label.configure(bg='SystemButtonFace', fg="black")
             self.feed_label.configure(bg='SystemButtonFace', fg="black")
+            self.name_label.configure(bg='SystemButtonFace', fg="black")
+            self.export_label.configure(bg='SystemButtonFace', fg="black")
             #Set Frames to Light Mode
             self.det_people_frame.configure(bg='darkgray')
             self.create_user_frame.configure(bg='darkgray')
@@ -196,11 +259,12 @@ class CameraApp:
             self.detected_people_text.configure(bg='SystemButtonFace', fg="black")
             self.name_cap.configure(bg='SystemButtonFace', fg="black")
             #Set Buttons to Light Mode 
-            self.start_button.configure(bg='SystemButtonFace', fg="black")
-            self.create_user_button.configure(bg='SystemButtonFace', fg="black")
+            self.start_button.configure(bg='SystemButtonFace', fg="black")   
             self.cap_image_button.configure(bg='SystemButtonFace', fg="black")
             self.refresh_button.configure(bg='SystemButtonFace', fg="black")
             self.export_button.configure(bg='SystemButtonFace', fg="black")
+            self.check_dark_mode.configure(bg='SystemButtonFace', fg="black")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
