@@ -37,40 +37,34 @@ class CameraApp:
         self.feed_label.place(x=350, y=50)
         
         # Create User UI Elements
-        self.create_user_button = tk.Button(self.root, text="Create User", width=10, height = 2) # Have to add ", command=create_user" and make create_user function
-        self.create_user_button.place(x=190,y=625)
-
         self.create_user_frame = tk.Frame(self.root, bg="darkgray", width=325, height=200)
         self.create_user_frame.place(x=300, y=500)
 
         # Capture image button
-        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) # Have to add ", command=cap_image" and create cap_image function
+        self.cap_image_button = tk.Button(self.root, text="Capture Image", width=20, height = 2, command = self.capture_image) 
         self.cap_image_button.place(x=395,y=550)
 
         # Username entry box
-        self.name_cap = tk.Text(self.root, height=2,width=35) # Have to write function to take user written text from the text box
+        self.name_cap = tk.Text(self.root, height=2,width=35) 
         self.name_cap.place(x=320,y=625)
         self.name_label = tk.Label(self.root, text="Enter name of User:")
         self.name_label.place(x=321, y=605)
 
         # Export/Refresh Buttons
-
-        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = Storage.refresh_button(self)) # Have to add ", command=refresh_list" and create refresh_list function
-        self.refresh_button.place(x=1075, y=615)
-        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) # Have to add ", command=refresh_list" and create refresh_list function
+        self.refresh_button = tk.Button(self.root, text="Refresh List", width=10, height = 2, command = self.refresh) 
         self.refresh_button.place(x=925, y=615)
 
 
         self.export_button = tk.Button(self.root, text="Export List", width=10, height=2, command=self.handle_export)
-        self.export_button.place(x=925, y=615)
+        self.export_button.place(x=1055, y=615)
 
         # Dropdown menu
         self.choices = ["txt", "csv", "json"]
         self.export_label = tk.Label(self.root, text="Export Type:")
-        self.export_label.place(x=925, y=650)
+        self.export_label.place(x=1055, y=665)
         self.export_dropdown = ttk.Combobox(self.root, values = self.choices)
         self.export_dropdown.pack(anchor = tk.W, padx = 10)
-        self.export_dropdown.place(x=925, y=675)
+        self.export_dropdown.place(x=1055, y=690)
 
         # Initializes the frame on the UI
         self.vid_frame = tk.Frame(self.root, bg="darkgray", width=685, height=395)
@@ -110,7 +104,7 @@ class CameraApp:
         uid, _ = self.storage.take_picture()
         if uid:
             self.recognition.load_known_faces()
-        
+        # Delete entered name from the user entry box
         self.name_cap.delete("0.0", tk.END)
 
     def handle_export(self):
@@ -234,6 +228,7 @@ class CameraApp:
             self.detect_label.configure(bg='gray60', fg="gray99")
             self.feed_label.configure(bg='gray60', fg="gray99")
             self.name_label.configure(bg='gray60', fg="gray99")
+            self.export_label.configure(bg='gray60', fg="gray99")
             #Set Frames to Dark Mode
             self.det_people_frame.configure(bg='gray27')
             self.create_user_frame.configure(bg='gray27')
@@ -243,7 +238,6 @@ class CameraApp:
             self.name_cap.configure(bg='gray60', fg="gray99")
             #Set Buttons to Dark Mode
             self.start_button.configure(bg='gray60', fg="gray99")
-            self.create_user_button.configure(bg='gray60', fg="gray99")
             self.cap_image_button.configure(bg='gray60', fg="gray99")
             self.refresh_button.configure(bg='gray60', fg="gray99")
             self.export_button.configure(bg='gray60', fg="gray99")
@@ -256,6 +250,7 @@ class CameraApp:
             self.detect_label.configure(bg='SystemButtonFace', fg="black")
             self.feed_label.configure(bg='SystemButtonFace', fg="black")
             self.name_label.configure(bg='SystemButtonFace', fg="black")
+            self.export_label.configure(bg='SystemButtonFace', fg="black")
             #Set Frames to Light Mode
             self.det_people_frame.configure(bg='darkgray')
             self.create_user_frame.configure(bg='darkgray')
@@ -264,8 +259,7 @@ class CameraApp:
             self.detected_people_text.configure(bg='SystemButtonFace', fg="black")
             self.name_cap.configure(bg='SystemButtonFace', fg="black")
             #Set Buttons to Light Mode 
-            self.start_button.configure(bg='SystemButtonFace', fg="black")
-            self.create_user_button.configure(bg='SystemButtonFace', fg="black")
+            self.start_button.configure(bg='SystemButtonFace', fg="black")   
             self.cap_image_button.configure(bg='SystemButtonFace', fg="black")
             self.refresh_button.configure(bg='SystemButtonFace', fg="black")
             self.export_button.configure(bg='SystemButtonFace', fg="black")
