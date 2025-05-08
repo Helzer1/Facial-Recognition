@@ -3,7 +3,6 @@ import tkinter as tk
 import cv2
 from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
-from facial_recognition import FacialRecognition # Import the facial_recognition class
 from file_storage import Storage
 from export_storage import ExportStorage
 from confidence_recognition import ConfidenceRecognition
