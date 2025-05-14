@@ -61,7 +61,7 @@ MONGO_URI=your-mongodb-connection-string
 python ui.py
 
 🗂️ Project Structure
-
+```
 facial-recognition/
 ├── ui.py                  # Main GUI application
 ├── mongo_storage.py       # MongoDB-based storage backend
@@ -71,3 +71,4 @@ facial-recognition/
 ├── requirements.txt
 ├── .env                   # MongoDB URI (excluded from Git)
 ├── README.md
+```
