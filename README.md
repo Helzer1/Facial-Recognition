@@ -38,25 +38,26 @@ cd facial-recognition
 ### 2. Create a Virtual Environment
 
 python3.8 -m venv venv
-# Activate it:
-# Windows
+Activate it:
+
+Windows
 venv\Scripts\activate
 
-# macOS/Linux
+macOS/Linux
 source venv/bin/activate
 
-3. Install Requirements
+### 3. Install Requirements
 
 pip install --upgrade pip
 pip install -r requirements.txt
 
-4. Add MongoDB Credentials
+### 4. Add MongoDB Credentials
 Create a .env file in the root of the project:
 
 MONGO_URI=your-mongodb-connection-string
 ⚠️ Never share your actual .env file publicly. You can use .env.example to guide collaborators.
 
-5. Run the Application
+### 5. Run the Application
 python ui.py
 
 🗂️ Project Structure
