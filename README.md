@@ -34,7 +34,8 @@ A real-time facial recognition system using Python, OpenCV, and dlib, featuring 
 
 git clone https://github.com/Helzer1/facial-recognition.git
 cd facial-recognition
-2. Create a Virtual Environment
+
+### 2. Create a Virtual Environment
 
 python3.8 -m venv venv
 # Activate it:
