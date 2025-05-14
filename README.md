@@ -31,43 +31,35 @@ A real-time facial recognition system using Python, OpenCV, and dlib, featuring 
 
 ### 1. Clone the Repository
 
-```bash
-git clone https://github.com/your-username/facial-recognition.git
+
+git clone https://github.com/Helzer1/facial-recognition.git
 cd facial-recognition
 2. Create a Virtual Environment
-bash
-Copy
-Edit
+
 python3.8 -m venv venv
 # Activate it:
 # Windows
 venv\Scripts\activate
+
 # macOS/Linux
 source venv/bin/activate
+
 3. Install Requirements
-bash
-Copy
-Edit
+
 pip install --upgrade pip
 pip install -r requirements.txt
+
 4. Add MongoDB Credentials
 Create a .env file in the root of the project:
 
-env
-Copy
-Edit
 MONGO_URI=your-mongodb-connection-string
 ⚠️ Never share your actual .env file publicly. You can use .env.example to guide collaborators.
 
 5. Run the Application
-bash
-Copy
-Edit
 python ui.py
+
 🗂️ Project Structure
-bash
-Copy
-Edit
+
 facial-recognition/
 ├── ui.py                  # Main GUI application
 ├── mongo_storage.py       # MongoDB-based storage backend
@@ -77,4 +69,3 @@ facial-recognition/
 ├── requirements.txt
 ├── .env                   # MongoDB URI (excluded from Git)
 ├── README.md
-└── images/  
