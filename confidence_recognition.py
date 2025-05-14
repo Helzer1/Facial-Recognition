@@ -20,9 +20,9 @@ class ConfidenceRecognition(FacialRecognition):
     - Low confidence (<50%)
     """
     
-    def __init__(self, capture=None, name_cap=None):
+    def __init__(self, capture, name_cap):
         # Initialize parent class FacialRecognition
-        super().__init__(capture, name_cap)
+        super().__init__()
         
         # Confidence thresholds
         self.confidence_threshold = 0.6
