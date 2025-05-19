@@ -9,7 +9,23 @@ from confidence_recognition import ConfidenceRecognition
 import time
 import os
 from dotenv import load_dotenv
+
+# MongoDB setup
 load_dotenv()
+raw_uri = os.getenv("MONGO_URI")
+if raw_uri.startswith('"') or raw_uri.endswith('"'):
+    print("⚠️ Cleaning up rogue quotes from .env")
+    raw_uri = raw_uri.strip('"')
+MONGO_URI = raw_uri
+
+#MONGO_URI = "mongodb+srv://michaelhelzer1:Helzer101!@facial-recognition-cluster.3stlv7u.mongodb.net/?retryWrites=true&w=majority&appName=facial-recognition-cluster"
+#MONGO_URI = os.getenv("MONGO_URI")
+if not MONGO_URI:
+    print(f"[DEBUG] Loaded MONGO_URI: {MONGO_URI}")
+    exit(1)
+
+print(f"[DEBUG] Loaded MONGO_URI: {repr(MONGO_URI)}")
+
 
 
 class CameraApp:
@@ -18,8 +34,7 @@ class CameraApp:
         self.root.title("Facial Recognition")
         self.root.geometry("1250x750")
 
-        # MongoDB setup
-        MONGO_URI = os.getenv("MONGO_URI")
+        
 
         # UI Elements
         self.dark_mode_var = tk.BooleanVar()
