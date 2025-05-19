@@ -18,8 +18,7 @@ if raw_uri.startswith('"') or raw_uri.endswith('"'):
     raw_uri = raw_uri.strip('"')
 MONGO_URI = raw_uri
 
-#MONGO_URI = "mongodb+srv://michaelhelzer1:Helzer101!@facial-recognition-cluster.3stlv7u.mongodb.net/?retryWrites=true&w=majority&appName=facial-recognition-cluster"
-#MONGO_URI = os.getenv("MONGO_URI")
+
 if not MONGO_URI:
     print(f"[DEBUG] Loaded MONGO_URI: {MONGO_URI}")
     exit(1)
