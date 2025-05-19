@@ -1,9 +1,16 @@
-# project dependencies 
+# Core facial recognition dependencies
 dlib==19.24.6
 face_recognition==1.3.0
 face-recognition-models==0.3.0
 numpy==1.24.4
-Pillow==10.4.0
 opencv-python==4.11.0.86
+Pillow==10.4.0
+
+# GUI and CLI tools
 click==8.1.8
 colorama==0.4.6
+tk  # part of Python stdlib; listed for clarity
+
+# New dependencies for MongoDB integration and env loading
+pymongo==4.7.1
+python-dotenv==1.0.1

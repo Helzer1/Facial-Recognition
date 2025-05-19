@@ -1,54 +1,74 @@
-# Facial-Recognition
+# Facial Recognition System with MongoDB and GUI
 
-This project implements a facial recognition system using Python. It includes a GUI for live camera feed display, facial recognition logic, and local file storage for images and metadata. The project leverages libraries such as OpenCV, face_recognition, and dlib.
+A real-time facial recognition system using Python, OpenCV, and dlib, featuring a Tkinter-based GUI and scalable cloud storage via MongoDB Atlas.
 
-# Features
+---
 
-- **Live Camera Feed:** View real-time video stream with detected faces.
-- **Face Recognition:** Identify known faces using stored encodings.
-- **Local File Storage:** Save images along with associated names for future recognition.
-- **Modular Design:** Separate modules for UI, facial recognition, and file storage.
+## 🔍 Features
 
-# Prerequisites
+- **Live Camera Feed:** Real-time webcam stream with facial detection.
+- **Face Recognition:** Match captured faces against stored encodings.
+- **MongoDB Cloud Storage:** Stores user face encodings, names, timestamps, and image paths.
+- **Export Options:** Export detected users to `.txt`, `.csv`, or `.json` format.
+- **Dark Mode UI:** Easily toggle between light and dark themes.
 
-- **Python 3.8** (recommended for compatibility with dlib and face_recognition)
-- 64-bit Python installation
+---
 
-# Setup
+## 📦 Technologies Used
 
-Clone the Repository:
+- Python 3.8
+- [OpenCV](https://opencv.org/)
+- [dlib](http://dlib.net/)
+- [face_recognition](https://github.com/ageitgey/face_recognition)
+- MongoDB Atlas (Cloud NoSQL Database)
+- Tkinter (GUI)
+- Pillow (image handling)
+- `python-dotenv` (environment variable handling)
 
-    git clone https://github.com/your-username/your-repo.git
-    cd your-repo
-    Create a Virtual Environment:
-        python3.8 -m venv venv
+---
 
-    Activate the Virtual Environment:
-        On Windows:
-            .\venv\Scripts\activate
-        On macOS/Linux:
-            source venv/bin/activate
+## 🛠️ Setup Instructions
 
-    Be sure to have the latest version of pip installed:
-        python -m pip install --upgrade pip
-
-    Install Dependencies:
-        pip install -r requirements.txt
-        If this is not working then pip may not be up to date. Please install latest version.
-
-    Run the Application:
-        python ui.py
+### 1. Clone the Repository
 
 
-    Project Structure
-        project_directory/
-        ├── file_storage.py         # Module for handling local image storage
-        ├── facial_recognition.py   # Module for face detection and recognition logic
-        ├── ui.py                   # Tkinter-based GUI for camera feed and recognition display
-        ├── requirements.txt        # List of project dependencies
-        └── README.md               # This file
+git clone https://github.com/Helzer1/facial-recognition.git
+cd facial-recognition
 
-    Notes
-    dlib: Ensure you have a 64-bit Python installation. Precompiled wheels for dlib are available if you encounter build issues.
+### 2. Create a Virtual Environment
 
-    IDE Configuration: If using VS Code, make sure to select the correct Python interpreter for your virtual environment.
+python3.8 -m venv venv
+Activate it:
+
+Windows
+venv\Scripts\activate
+
+macOS/Linux
+source venv/bin/activate
+
+### 3. Install Requirements
+
+pip install --upgrade pip
+pip install -r requirements.txt
+
+### 4. Add MongoDB Credentials
+Create a .env file in the root of the project:
+
+MONGO_URI=your-mongodb-connection-string
+⚠️ Never share your actual .env file publicly. You can use .env.example to guide collaborators.
+
+### 5. Run the Application
+python ui.py
+
+🗂️ Project Structure
+```
+facial-recognition/
+├── ui.py                  # Main GUI application
+├── mongo_storage.py       # MongoDB-based storage backend
+├── facial_recognition.py  # Core face recognition logic
+├── confidence_recognition.py # Adds confidence scores to matches
+├── export_storage.py      # Handles export to txt/csv/json
+├── requirements.txt
+├── .env                   # MongoDB URI (excluded from Git)
+├── README.md
+```
