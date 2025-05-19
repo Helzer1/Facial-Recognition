@@ -15,3 +15,5 @@ __pycache__/
 stored_images/
 image_data/
 exported_data/
+images/
+.env
